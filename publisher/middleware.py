@@ -12,10 +12,14 @@ class PublisherMiddleware(object):
 
     def process_request(self, request):
         PublisherMiddleware._draft_status[current_thread()] = self.is_draft(request)
+        return None
 
     @staticmethod
     def process_response(request, response):
-        del PublisherMiddleware._draft_status[current_thread()]
+        try:
+            del PublisherMiddleware._draft_status[current_thread()]
+        except KeyError:
+            pass
         return response
 
     @staticmethod
