@@ -79,11 +79,11 @@ class PublisherModelBase(models.Model):
         return False
 
     @assert_draft
-    def publish(self):
+    def publish(self, force=False):
         if not self.is_draft:
             return
 
-        if not self.is_dirty:
+        if not self.is_dirty and not force:
             return
 
         # Reference self for readability
@@ -110,7 +110,6 @@ class PublisherModelBase(models.Model):
         publish_obj.publisher_published_at = draft_obj.publisher_published_at
 
         # Link the published obj to the draft version
-        # publish_obj.publisher_linked = draft_obj
         publish_obj.save()
 
         # Check for translations, if so duplicate the object
